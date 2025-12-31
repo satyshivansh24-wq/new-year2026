@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year Betu!</title>
+    <style>
+        /* Import Elegant Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap');
+
+        :root {
+            --glow-color: #ff3e60;
+            --gold: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            /* Prevent scrolling during animation */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 2s ease;
+        }
+
+        /* --- INITIAL SCREEN --- */
+        #initial-screen {
+            position: absolute;
+            z-index: 10;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .glow-text {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: glow 2s ease-in-out infinite alternate;
+            cursor: pointer;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--glow-color);
+            }
+
+            to {
+                text-shadow: 0 0 20px #fff, 0 0 30px #ff7b92, 0 0 40px var(--glow-color);
+            }
+        }
+
+        /* --- COUNTDOWN --- */
+        #countdown {
+            display: none;
+            font-size: 8rem;
+            font-weight: 700;
+            z-index: 5;
+        }
+
+        .count-anim {
+            animation: zoomFade 1s ease-in-out forwards;
+        }
+
+        @keyframes zoomFade {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+
+        /* --- FINAL SCREEN --- */
+        #final-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 5;
+            width: 90%;
+        }
+
+        .main-wish {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            margin-bottom: 20px;
+            opacity: 0;
+        }
+
+        .quotes-container {
+            margin-top: 30px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #e0e0e0;
+            max-width: 500px;
+        }
+
+        /* --- FIREWORKS CANVAS --- */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        /* --- ANIMATION CLASSES --- */
+        .fade-in-up {
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .main-wish {
+                font-size: 2.5rem;
+            }
+
+            .glow-text {
+                font-size: 1.8rem;
+            }
+
+            #countdown {
+                font-size: 5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="initial-screen" onclick="startExperience()">
+        <h1 class="glow-text">Click Here</h1>
+    </div>
+
+    <div id="countdown"></div>
+
+    <div id="final-screen">
+        <h1 class="main-wish" id="wish">🎉 Happy New Year Betu! 🎉</h1>
+
+        <div class="quotes-container" id="quotes">
+            <p class="quote">“With you, every year feels special.”</p>
+            <p class="quote">“New year, same love, stronger than ever.”</p>
+            <p class="quote">“You are my favorite beginning and my forever.”</p>
+        </div>
+    </div>
+
+    <script>
+        const initialScreen = document.getElementById('initial-screen');
+        const countdownEl = document.getElementById('countdown');
+        const finalScreen = document.getElementById('final-screen');
+        const wish = document.getElementById('wish');
+        const quotes = document.getElementById('quotes');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+
+        // Resize canvas
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function startExperience() {
+            // Hide initial screen
+            initialScreen.style.display = 'none';
+
+            // Start Countdown sequence
+            runCountdown();
+        }
+
+        function runCountdown() {
+            countdownEl.style.display = 'block';
+            let count = 1;
+
+            const interval = setInterval(() => {
+                if (count <= 3) {
+                    countdownEl.textContent = count;
+                    countdownEl.classList.remove('count-anim');
+                    void countdownEl.offsetWidth; // Trigger reflow
+                    countdownEl.classList.add('count-anim');
+                    count++;
+                } else {
+                    clearInterval(interval);
+                    showFinalScreen();
+                }
+            }, 1200);
+        }
+
+        function showFinalScreen() {
+            countdownEl.style.display = 'none';
+            document.body.style.background = "radial-gradient(circle, #1a0a1f 0%, #000000 100%)";
+            finalScreen.style.display = 'flex';
+
+            // Trigger animations
+            wish.classList.add('fade-in-up');
+            setTimeout(() => {
+                quotes.classList.add('fade-in-up');
+            }, 800);
+
+            // Start Fireworks
+            animateFireworks();
+        }
+
+        // --- FIREWORKS LOGIC ---
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
+                };
+                this.alpha = 1;
+                this.friction = 0.95;
+            }
+
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
+
+        function createFirework(x, y) {
+            const colors = ['#ff3e60', '#ffd700', '#00fbff', '#ff00ff', '#ffffff'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animateFireworks() {
+            requestAnimationFrame(animateFireworks);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p, i) => {
+                if (p.alpha > 0) {
+                    p.update();
+                    p.draw();
+                } else {
+                    particles.splice(i, 1);
+                }
+            });
+
+            // Randomly launch fireworks
+            if (Math.random() < 0.05) {
+                createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.7);
+            }
+        }
+    </script>
+</body>
+
+</html>
